@@ -88,32 +88,15 @@ public class Student {
 
     public Map<Course, Float> createReport() {
         Map<Course, Float> report = new HashMap<>();
-        Map<Course, Integer> counter = new HashMap<>();
         String sqlQuery =
-                "SELECT course.id, course.name, grade.grade FROM grade JOIN course ON grade.course_id = course.id " +
-                "WHERE grade.student_id = (?)";
+                "SELECT course.id, course.name, AVG(grade.grade) AS avg_grade FROM grade JOIN course ON grade.course_id = course.id " +
+                "WHERE grade.student_id = (?) "+
+                "GROUP BY grade.student_id, course.id, course.name";
         Object[] args = { this.id };
         try(ResultSet rs = QueryExecutor.read(sqlQuery, args)) {
             while (rs.next()) {
                 Course course = new Course(rs.getInt("id"), rs.getString("name"));
-                if (counter.containsKey(course)) {
-                    Integer currentVal = counter.get(course);
-                    counter.put(course, currentVal + 1);
-                } else {
-                    counter.put(course, 1);
-                }
-
-                if (report.containsKey(course)) {
-                    float currentVal = report.get(course);
-                    report.put(course, currentVal + rs.getFloat("grade"));
-                } else {
-                    report.put(course, rs.getFloat("grade"));
-                }
-            }
-
-            for (Course course : report.keySet()) {
-                Integer count = counter.get(course);
-                report.put(course, report.get(course) / count);
+                report.put(course, rs.getFloat("avg_grade"));
             }
 
             return report;
