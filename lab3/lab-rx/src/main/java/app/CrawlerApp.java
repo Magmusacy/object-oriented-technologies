@@ -5,10 +5,9 @@ import java.util.List;
 
 public class CrawlerApp {
 
-    public static final String GOOGLE_CUSTOM_SEARCH_API_KEY = "AIzaSyABcALkIU-W7inP3DAzabFJgEfJAu-2gAI";
+    public static final String GOOGLE_CUSTOM_SEARCH_API_KEY = System.getenv("GOOGLE_CUSTOM_SEARCH_API_KEY");
 
     private static final List<String> TOPICS = List.of("Agent Cooper", "Sherlock", "Poirot", "Detective Monk", "Scooby Doo", "Herobrine minecraft");
-
 
     public static void main(String[] args) throws IOException {
         PhotoCrawler photoCrawler = new PhotoCrawler();

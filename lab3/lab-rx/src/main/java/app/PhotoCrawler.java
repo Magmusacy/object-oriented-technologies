@@ -42,9 +42,11 @@ public class PhotoCrawler {
     }
 
     public void downloadPhotosForQuery(String query) throws IOException {
-        photoDownloader.searchForPhotos(query).subscribe((photo) -> {
+        photoDownloader.searchForPhotos(query)
+                .take(3)
+                .subscribe((photo) -> {
             photoSerializer.savePhoto(photo);
-        });
+        }, e -> System.out.println("Dupa"));
     }
 
     public void downloadPhotosForMultipleQueries(List<String> queries) {
