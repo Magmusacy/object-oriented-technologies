@@ -48,6 +48,13 @@ public class PhotoDownloader {
         });
     }
 
+    public Observable<Photo> searchForPhotos(List<String> searchQueries) {
+        return Observable
+                .fromIterable(searchQueries)
+                .flatMap(searchQuery -> searchForPhotos(searchQuery))
+                .subscribeOn(Schedulers.io());
+    }
+
     private Photo getPhoto(String photoUrl) throws IOException {
         log.info("Downloading... " + photoUrl);
         byte[] photoData = downloadPhoto(photoUrl);

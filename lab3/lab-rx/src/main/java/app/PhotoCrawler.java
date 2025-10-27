@@ -1,5 +1,6 @@
 package app;
 
+import io.reactivex.rxjava3.core.Observable;
 import model.Photo;
 import util.PhotoDownloader;
 import util.PhotoProcessor;
@@ -33,6 +34,7 @@ public class PhotoCrawler {
     public void downloadPhotoExamples() {
         try {
             photoDownloader.getPhotoExamples()
+                    .compose(observable -> processPhotos(observable))
                     .subscribe((photo) -> {
                 photoSerializer.savePhoto(photo);
             });
@@ -43,6 +45,7 @@ public class PhotoCrawler {
 
     public void downloadPhotosForQuery(String query) throws IOException {
         photoDownloader.searchForPhotos(query)
+                .compose(observable -> processPhotos(observable))
                 .take(3)
                 .subscribe((photo) -> {
             photoSerializer.savePhoto(photo);
@@ -50,6 +53,16 @@ public class PhotoCrawler {
     }
 
     public void downloadPhotosForMultipleQueries(List<String> queries) {
-        // TODO Implement me :(
+        photoDownloader.searchForPhotos(queries)
+                .compose(observable -> processPhotos(observable))
+                .subscribe((photo) -> {
+                    photoSerializer.savePhoto(photo);
+                }, e -> System.out.println("Dupa"));
+    }
+
+    public Observable<Photo> processPhotos(Observable<Photo> photo) {
+        return photo
+                .filter(p -> photoProcessor.isPhotoValid(p))
+                .map(p -> photoProcessor.convertToMiniature(p));
     }
 }
