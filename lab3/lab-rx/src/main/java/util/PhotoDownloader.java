@@ -38,7 +38,9 @@ public class PhotoDownloader {
             for (String photoUrl : photoUrls) {
                 if (!emitter.isDisposed()) {
                     try {
-                        emitter.onNext(getPhoto(photoUrl));
+                        if (photoUrl.contains(".jpg") || photoUrl.contains(".png") || photoUrl.contains(".webp")) {
+                            emitter.onNext(getPhoto(photoUrl));
+                        }
                     } catch (IOException e) {
                         emitter.onError(e);
                     }
@@ -51,7 +53,7 @@ public class PhotoDownloader {
     public Observable<Photo> searchForPhotos(List<String> searchQueries) {
         return Observable
                 .fromIterable(searchQueries)
-                .flatMap(searchQuery -> searchForPhotos(searchQuery))
+                .flatMap(this::searchForPhotos)
                 .subscribeOn(Schedulers.io());
     }
 

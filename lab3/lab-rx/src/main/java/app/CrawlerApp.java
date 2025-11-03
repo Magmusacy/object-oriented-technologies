@@ -7,13 +7,11 @@ public class CrawlerApp {
 
     public static final String GOOGLE_CUSTOM_SEARCH_API_KEY = System.getenv("GOOGLE_CUSTOM_SEARCH_API_KEY");
 
-    private static final List<String> TOPICS = List.of("Agent Cooper", "Sherlock", "Poirot", "Detective Monk", "Scooby Doo", "Herobrine minecraft");
+    private static final List<String> TOPICS = List.of( "Sherlock", "Poirot", "Detective Monk", "Scooby Doo", "Herobrine minecraft");
 
     public static void main(String[] args) throws IOException, InterruptedException {
         PhotoCrawler photoCrawler = new PhotoCrawler();
         photoCrawler.resetLibrary();
-//        photoCrawler.downloadPhotoExamples();
-//        photoCrawler.downloadPhotosForQuery(TOPICS.get(0));
         photoCrawler.downloadPhotosForMultipleQueries(TOPICS);
         Thread.sleep(10000);
     }

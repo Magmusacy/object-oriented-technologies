@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class PhotoSerializer {
@@ -36,6 +37,10 @@ public class PhotoSerializer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void savePhotos(List<Photo> photos) {
+        photos.parallelStream().forEach(this::savePhoto);
     }
 
     public void deleteLibraryContents() {
