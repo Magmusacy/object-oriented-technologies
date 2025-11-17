@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.inject.Inject;
 import pl.edu.agh.logger.Logger;
 
 public class SchoolClass implements Serializable {
@@ -36,10 +37,15 @@ public class SchoolClass implements Serializable {
 	}
 
 	public void addSubject(Subject subject) {
+		addSubject(subject, null);
+	}
+
+	public void addSubject(Subject subject, Logger logger) {
 		if (!subjects.contains(subject)) {
 			subjects.add(subject);
-			Logger.getInstance().log(
-					"Added " + subject.toString() + " to " + this.toString());
+			if (logger != null) {
+				logger.log("Added " + subject.toString() + " to " + this.toString());
+			}
 		}
 	}
 
@@ -48,12 +54,16 @@ public class SchoolClass implements Serializable {
 	}
 
 	public void addStudent(Student student) {
+		addStudent(student, null);
+	}
+
+	public void addStudent(Student student, Logger logger) {
 		if (!students.contains(student)) {
 			students.add(student);
 			student.setSchoolClass(this);
-			Logger.getInstance().log(
-					"Added " + student.toString() + " to class "
-							+ this.toString());
+			if (logger != null) {
+				logger.log("Added " + student.toString() + " to class " + this.toString());
+			}
 		}
 	}
 

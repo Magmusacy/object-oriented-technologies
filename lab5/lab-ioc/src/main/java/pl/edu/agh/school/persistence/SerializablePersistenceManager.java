@@ -4,29 +4,46 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import pl.edu.agh.logger.Logger;
 import pl.edu.agh.school.SchoolClass;
+import pl.edu.agh.school.PersistanceManager;
 import pl.edu.agh.school.Teacher;
 
-public final class SerializablePersistenceManager {
+public final class SerializablePersistenceManager implements PersistanceManager {
 
-    private static final Logger log = Logger.getInstance();
+    private final Logger log;
 
     private String teachersStorageFileName;
 
     private String classStorageFileName;
 
-    public SerializablePersistenceManager() {
+    @Inject
+    public SerializablePersistenceManager(Logger log) {
+        this.log = log;
         teachersStorageFileName = "teachers.dat";
         classStorageFileName = "classes.dat";
     }
 
+    @Inject
+    public void setTeachersStorageFileName(@Named("teachers_storage") String teachersStorageFileName) {
+        this.teachersStorageFileName = teachersStorageFileName;
+    }
+
+    @Inject
+    public void setClassStorageFileName(@Named("class_storage") String classStorageFileName) {
+        this.classStorageFileName = classStorageFileName;
+    }
+
+    @Override
     public void saveTeachers(List<Teacher> teachers) {
         if (teachers == null) {
             throw new IllegalArgumentException();
         }
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(teachersStorageFileName))) {
             oos.writeObject(teachers);
+            log.log("Saving teachers");
         } catch (FileNotFoundException e) {
             throw new IllegalArgumentException(e);
         } catch (IOException e) {
@@ -34,12 +51,13 @@ public final class SerializablePersistenceManager {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<Teacher> loadTeachers() {
         ArrayList<Teacher> res = null;
         try (ObjectInputStream ios = new ObjectInputStream(new FileInputStream(teachersStorageFileName))) {
-
             res = (ArrayList<Teacher>) ios.readObject();
+            log.log("Loading teachers");
         } catch (FileNotFoundException e) {
             res = new ArrayList<>();
         } catch (IOException e) {
@@ -50,12 +68,13 @@ public final class SerializablePersistenceManager {
         return res;
     }
 
+    @Override
     public void saveClasses(List<SchoolClass> classes) {
         if (classes == null) {
             throw new IllegalArgumentException();
         }
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(classStorageFileName))) {
-
+            log.log("Saving classes");
             oos.writeObject(classes);
         } catch (FileNotFoundException e) {
             throw new IllegalArgumentException(e);
@@ -65,9 +84,11 @@ public final class SerializablePersistenceManager {
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public List<SchoolClass> loadClasses() {
         ArrayList<SchoolClass> res = null;
         try (ObjectInputStream ios = new ObjectInputStream(new FileInputStream(classStorageFileName))) {
+            log.log("Loading classes");
             res = (ArrayList<SchoolClass>) ios.readObject();
         } catch (FileNotFoundException e) {
             res = new ArrayList<>();

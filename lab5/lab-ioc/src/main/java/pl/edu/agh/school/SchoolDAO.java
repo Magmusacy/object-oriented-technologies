@@ -1,23 +1,25 @@
 package pl.edu.agh.school;
 
+import com.google.inject.Inject;
+import pl.edu.agh.logger.Logger;
+
 import java.util.Collections;
 import java.util.List;
 
-import pl.edu.agh.logger.Logger;
-import pl.edu.agh.school.persistence.SerializablePersistenceManager;
-
 public class SchoolDAO {
 
-    public static final Logger log = Logger.getInstance();
+    private final Logger log;
 
     private final List<Teacher> teachers;
 
     private final List<SchoolClass> classes;
 
-    private final SerializablePersistenceManager manager;
+    private final PersistanceManager manager;
 
-    public SchoolDAO() {
-        manager = new SerializablePersistenceManager();
+    @Inject
+    public SchoolDAO(PersistanceManager manager, Logger log) {
+        this.manager = manager;
+        this.log = log;
         teachers = manager.loadTeachers();
         classes = manager.loadClasses();
     }

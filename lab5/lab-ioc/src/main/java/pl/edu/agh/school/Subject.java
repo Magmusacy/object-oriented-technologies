@@ -30,11 +30,16 @@ public class Subject implements Serializable {
 	}
 
 	public void addTerm(Term newTerm) {
+		addTerm(newTerm, null);
+	}
+
+	public void addTerm(Term newTerm, Logger logger) {
 		if (!terms.contains(newTerm)) {
 			terms.add(newTerm);
 			newTerm.setSubject(this);
-			Logger.getInstance().log(
-					"Added " + newTerm.toString() + " to " + toString());
+			if (logger != null) {
+				logger.log("Added " + newTerm.toString() + " to " + toString());
+			}
 		}
 	}
 
