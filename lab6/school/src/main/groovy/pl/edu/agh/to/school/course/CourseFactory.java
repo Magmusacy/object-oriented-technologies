@@ -13,6 +13,7 @@ public class CourseFactory {
 
     @Bean
 //    @Scope("prototype")
+    @Qualifier("ComputerNetworks")
     public Course computerNetworksCourse() {
         var student = new Student("Piotr", "Budynek", LocalDate.of(1990, 11, 7), "22334455", "budynek@student.agh.edu.pl");
         var course = new Course("Sieci komputerowe");
@@ -21,10 +22,10 @@ public class CourseFactory {
     }
 
     @Bean
-    @Qualifier("Course2")
+    @Qualifier("ObjectOrientedProgramming")
     public Course objectOrientedProgrammingCourse() {
         var student = new Student("Piotr", "Budynek", LocalDate.of(1990, 11, 7), "22334455", "budynek@student.agh.edu.pl");
-        var course = new Course("Sieci komputerowe");
+        var course = new Course("OOP");
         course.enrollStudent(student);
         return course;
     }

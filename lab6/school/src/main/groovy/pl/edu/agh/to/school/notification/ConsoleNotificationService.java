@@ -2,11 +2,13 @@ package pl.edu.agh.to.school.notification;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import pl.edu.agh.to.school.grade.Grade;
 import pl.edu.agh.to.school.student.Student;
 
 @Service
+@Profile("test")
 public class ConsoleNotificationService implements NotificationService {
     @PostConstruct
     void onServiceStarted() {

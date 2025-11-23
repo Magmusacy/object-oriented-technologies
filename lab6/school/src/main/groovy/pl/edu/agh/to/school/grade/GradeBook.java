@@ -23,6 +23,10 @@ public class GradeBook {
         return newGrade;
     }
 
+    public Map<String, List<Grade>> getStudentGrades() {
+        return studentGrades;
+    }
+
     @PostConstruct
     void onServiceStarted() {
         IO.println("Wystartowano GradeBook service");

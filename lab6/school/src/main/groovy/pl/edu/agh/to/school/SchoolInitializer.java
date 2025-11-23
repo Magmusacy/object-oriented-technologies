@@ -2,6 +2,7 @@ package pl.edu.agh.to.school;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.edu.agh.to.school.course.Course;
 import pl.edu.agh.to.school.student.StudentService;
@@ -14,8 +15,9 @@ public class SchoolInitializer {
     private final Course computerNetworksCourse;
     private final List<Course> allCourses;
     private final Course objectOrientedProgrammingCourse;
+    private @Value("${school.app.version}") String version;
 
-    public SchoolInitializer(StudentService studentService, @Qualifier("computerNetworksCourse") Course computerNetworksCourse, List<Course> allCourses, @Qualifier("Course2") Course course2) {
+    public SchoolInitializer(StudentService studentService, @Qualifier("ComputerNetworks") Course computerNetworksCourse, List<Course> allCourses, @Qualifier("ObjectOrientedProgramming") Course course2) {
         this.studentService = studentService;
         this.computerNetworksCourse = computerNetworksCourse;
         this.allCourses = allCourses;
@@ -32,8 +34,9 @@ public class SchoolInitializer {
 
     @PostConstruct
     public void initComputerNetworksCourse() {
+        IO.println("Version: %s".formatted(version));
         computerNetworksCourse.getStudents()
                 .forEach(student -> studentService.assignGrade(student, computerNetworksCourse, 4.5));
-        IO.println("Mamy %d kursów".formatted(allCourses.size()));
+//        IO.println("Mamy %d kursów".formatted(allCourses.size()));
     }
 }
